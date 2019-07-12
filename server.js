@@ -30,10 +30,17 @@ app.engine(handlebars, exbars({defaultLayout: "main"}));
 app.set("view engine", "handlebars");
 
 // Connect to the Mongo DB//
+mongoose.connect("mongodb://localhost/scraped-news", {useNewUrlParser: true});
+var contact = mongoose.connection;
 
+contact.on("error", console.error.bind(console, "connection error:"));
+contact.once("open", function() {
+    console.log("Connected to Mongoose!");
+  });
 
 //Routes//
-
+require("./routes/apiRoutes")(app);
+require("./routes/htmlRoutes")(app);
 
 //To start the server//
 app.listen(PORT, function(){
